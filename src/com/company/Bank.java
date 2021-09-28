@@ -27,10 +27,19 @@ public class Bank {
                     Optional<Customer> current = selectCustomer(menuReader);
                     if(current.isPresent())
                     break;
+                case 4:
+                    doYearlyMaintenance();
+                    break;
                 default:
                     System.out.println("Please choose one of the menu options");
             }
         }
+    }
+
+    private void doYearlyMaintenance() {
+        for(var currentAccount: allAccounts);
+        currentAccount.addinterest();
+        System.out.println("Account ID: " + currentAccount.getAccountID() + "has balance of " + currentAccount.checkBalance());
     }
 
     private void doCustomerMenu(Scanner menuReader){
@@ -41,15 +50,60 @@ public class Bank {
         var idTofind = reader.nextInt();
         for (var currentCustomer: allCustomers){
             if(currentCustomer.getId() == idTofind)
-                return new Optional
+                return Optional.of(currentCustomer);
+        }
+        return Optional.empty();
+    }
+    private void doCustomerMenu(Scanner menuReader, Customer currentCustomer){
+        while(true){
+            printCustomerMenu();
+            var customerChoice = menuReader.nextInt();
+            switch (customerChoice){
+                case 1:
+                    openCustomerAccount(menuReader, currentCustomer);
+                    break;
+                case 2:
+                    closeCustomerAccount(menuReader, currentCustomer);
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("Invalid Input, please choose a listed option");
+            }
+        }
+    }
+    private void printCustomerMenu(){
+        System.out.println("_______________________________________________");
+        System.out.println(" What do you want to do with this customer");
+        System.out.println("    [1] Open an account");
+        System.out.println("    [2] Close an account");
+        System.out.println("    [3] Return to main menu");
+        System.out.println("_______________________________________________");
+    }
+    private void openCustomerAccount(Scanner menuReader, Customer currentCustomer){
+        System.out.println("Creating account number......");
+        System.out.println(" What is the initial deposit");
+        var initialDeposit = menuReader.nextDouble();
+        var newAccount = currentCustomer.openAccount(initialDeposit);
+        allAccounts.add(newAccount);
+    }
+    private void closeCustomerAccount(Scanner menuReader, Customer currentCustomer){
+        System.out.println(" enter account number: ");
+        var accountNum = menuReader.nextInt();
+        Optional<BankAccount> accountToClose = currentCustomer.closeAccount(accountNum);
+        if(accountToClose.isPresent()){
+            allAccounts.remove(accountToClose.get());
         }
     }
 
     private void printMenu() {
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         System.out.println("what would you like to do next?");
         System.out.println("    [1] Exit Program");
         System.out.println("    [2] Add Customer");
         System.out.println("    [3] Select customer by ID");
+        System.out.println("    [4] Do the yearly maintenance");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         System.out.print(" Enter Choice:");
     }
     private void addCustomer(Scanner inputReader){
